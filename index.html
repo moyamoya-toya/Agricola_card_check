@@ -12,7 +12,6 @@
         }
         /* 各テーブルコンテナのスクロールを有効にするためのスタイル */
         .table-container-scrollable {
-            /* max-heightはflex-growで置き換えるため削除 */
             overflow-y: auto;
             border-radius: 0.5rem; /* rounded-lg */
             border: 1px solid #e5e7eb; /* gray-200 */
@@ -40,6 +39,10 @@
         .checked-row {
             background-color: #e0f2fe; /* light blue-100 */
         }
+        /* 行全体がクリック可能であることを示すカーソル */
+        .clickable-row {
+            cursor: pointer;
+        }
     </style>
 </head>
 <body class="bg-gray-100 flex flex-col min-h-screen p-0">
@@ -60,7 +63,7 @@
                                 <th scope="col" class="px-2 py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"></th>
                                 <th scope="col" class="px-2 py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
                                 <th scope="col" class="px-2 py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">名称</th>
-                                <th scope="col" class="px-2 py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">効果</th>
+                                <th scope="col" class="px-2 py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden-column detail-column">効果</th>
                                 <th scope="col" class="px-2 py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden-column detail-column">評価点</th>
                                 <th scope="col" class="px-2 py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden-column detail-column">種類</th>
                                 <th scope="col" class="px-2 py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden-column detail-column">評価</th>
@@ -81,7 +84,7 @@
                                 <th scope="col" class="px-2 py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"></th>
                                 <th scope="col" class="px-2 py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
                                 <th scope="col" class="px-2 py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">名称</th>
-                                <th scope="col" class="px-2 py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">効果</th>
+                                <th scope="col" class="px-2 py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden-column detail-column">効果</th>
                                 <th scope="col" class="px-2 py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden-column detail-column">評価点</th>
                                 <th scope="col" class="px-2 py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden-column detail-column">種類</th>
                                 <th scope="col" class="px-2 py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden-column detail-column">評価</th>
@@ -169,7 +172,7 @@ E108,ブラックベリー農家,柵を建設するたびに、建設した柵�
 
                 if (columns && columns.length >= 6) { // Check if expected number of columns exist
                     const tr = document.createElement('tr');
-                    tr.className = 'hover:bg-gray-50';
+                    tr.className = 'hover:bg-gray-50 clickable-row'; // Make the entire row clickable
 
                     const cleanColumns = columns.map(col => {
                         let cleaned = col.startsWith(',') ? col.substring(1) : col;
@@ -191,31 +194,37 @@ E108,ブラックベリー農家,柵を建設するたびに、建設した柵�
                     tdCheckbox.className = 'px-2 py-1 whitespace-nowrap';
                     const checkbox = document.createElement('input');
                     checkbox.type = 'checkbox';
-                    checkbox.className = 'form-checkbox h-3 w-3 text-blue-600 rounded'; // チェックボックスを小さく
-                    checkbox.addEventListener('change', (event) => {
-                        if (event.target.checked) {
+                    checkbox.className = 'form-checkbox h-3 w-3 text-blue-600 rounded pointer-events-none'; // Smaller checkbox, disable direct clicks
+                    tdCheckbox.appendChild(checkbox);
+                    tr.appendChild(tdCheckbox);
+
+                    // Add click listener to the row to toggle checkbox and row highlighting
+                    tr.addEventListener('click', () => {
+                        checkbox.checked = !checkbox.checked; // Toggle checkbox state
+                        if (checkbox.checked) {
                             tr.classList.add('checked-row');
                         } else {
                             tr.classList.remove('checked-row');
                         }
                     });
-                    tdCheckbox.appendChild(checkbox);
-                    tr.appendChild(tdCheckbox);
 
 
                     // Create and append each cell
                     const tdId = document.createElement('td');
-                    tdId.className = 'px-2 py-1 whitespace-nowrap text-sm font-medium text-gray-900';
+                    // IDの文字サイズを大きく
+                    tdId.className = 'px-2 py-1 whitespace-nowrap text-base font-medium text-gray-900';
                     tdId.textContent = id;
                     tr.appendChild(tdId);
 
                     const tdName = document.createElement('td');
-                    tdName.className = 'px-2 py-1 text-sm text-gray-900 whitespace-nowrap'; // 名称は改行しない
+                    // 名称の文字サイズを大きくし、改行しない
+                    tdName.className = 'px-2 py-1 text-base text-gray-900 whitespace-nowrap';
                     tdName.textContent = name;
                     tr.appendChild(tdName);
 
                     const tdEffect = document.createElement('td');
-                    tdEffect.className = 'px-2 py-1 text-xs text-gray-500 wrap-text'; // 効果は文字サイズ小さく、折り返す
+                    // 効果は文字サイズ小さく、折り返し、デフォルトで非表示
+                    tdEffect.className = 'px-2 py-1 text-xs text-gray-500 wrap-text hidden-column detail-column';
                     tdEffect.textContent = effect;
                     tr.appendChild(tdEffect);
 
