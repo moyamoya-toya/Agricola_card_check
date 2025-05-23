@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>アグリコラ 禁止カードリスト<</title>
+    <title>アグリコラ 禁止カードリスト</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
@@ -58,7 +58,7 @@
 </head>
 <body class="bg-gray-100 min-h-screen flex flex-col">
     <div class="flex flex-col flex-grow w-full h-full">
-        <h1 class="text-3xl font-bold text-center mb-6 text-gray-800 pt-4">アグリコラ 全カードリスト</h1>
+        <h1 class="text-3xl font-bold text-center mb-6 text-gray-800 pt-4">アグリコラ 禁止カードリスト</h1>
 
         <div class="flex flex-wrap justify-center gap-2 mb-6 px-4">
             <button class="px-4 py-2 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 transition-colors duration-200" data-column="effect-col">効果</button>
@@ -72,8 +72,8 @@
             <span class="block sm:inline" id="error-text">データの取得に失敗しました。</span>
         </div>
 
-        <div class="flex flex-row flex-grow w-full gap-6 px-4 pb-4">
-            <div class="bg-white rounded-lg shadow-lg p-4 flex flex-col flex-grow w-full w-1/2 overflow-hidden">
+        <div id="card-lists-container" class="flex flex-row flex-grow w-full gap-6 px-4 pb-4">
+            <div id="small-improvement-list" class="bg-white rounded-lg shadow-lg p-4 flex flex-col flex-grow w-1/2 overflow-hidden">
                 <h2 class="text-2xl font-semibold text-gray-700 mb-4 text-center">小進歩カード</h2>
                 <div class="table-wrapper card-list-container">
                     <table id="small-improvement-table" class="min-w-full divide-y divide-gray-200">
@@ -96,7 +96,7 @@
                 </div>
             </div>
 
-            <div class="bg-white rounded-lg shadow-lg p-4 flex flex-col flex-grow w-full w-1/2 overflow-hidden">
+            <div id="occupation-list" class="bg-white rounded-lg shadow-lg p-4 flex flex-col flex-grow w-1/2 overflow-hidden">
                 <h2 class="text-2xl font-semibold text-gray-700 mb-4 text-center">職業カード</h2>
                 <div class="table-wrapper card-list-container">
                     <table id="occupation-table" class="min-w-full divide-y divide-gray-200">
@@ -293,6 +293,11 @@
                 const columnClass = this.dataset.column;
                 console.log(`ボタンクリック: 列 '${columnClass}' をトグルします。`);
 
+                // Get references to the main layout elements
+                const cardListsContainer = document.getElementById('card-lists-container');
+                const smallImprovementList = document.getElementById('small-improvement-list');
+                const occupationList = document.getElementById('occupation-list');
+
                 // Toggle header visibility
                 document.querySelectorAll(`th.${columnClass}`).forEach(headerCell => {
                     headerCell.classList.toggle('hidden-column');
@@ -304,6 +309,31 @@
                     bodyCell.classList.toggle('hidden-column');
                     console.log(`ボディセル (内容: '${bodyCell.textContent.trim().substring(0, 30)}...') の表示を切り替えました。`);
                 });
+
+                // Special handling for '効果' column to switch layout
+                if (columnClass === 'effect-col') {
+                    // Check if '効果' column is now visible (i.e., does NOT have 'hidden-column' class)
+                    const isEffectColumnVisible = !document.querySelector(`th.effect-col`).classList.contains('hidden-column');
+
+                    if (isEffectColumnVisible) {
+                        // Switch to 1-column layout
+                        cardListsContainer.classList.remove('flex-row');
+                        cardListsContainer.classList.add('flex-col');
+                        smallImprovementList.classList.remove('w-1/2');
+                        smallImprovementList.classList.add('w-full');
+                        occupationList.classList.remove('w-1/2');
+                        occupationList.classList.add('w-full');
+                    } else {
+                        // Switch back to 2-column layout
+                        cardListsContainer.classList.remove('flex-col');
+                        cardListsContainer.classList.add('flex-row');
+                        smallImprovementList.classList.remove('w-full');
+                        smallImprovementList.classList.add('w-1/2');
+                        occupationList.classList.remove('w-full');
+                        occupationList.classList.add('w-1/2');
+                    }
+                    console.log(`効果列表示状態: ${isEffectColumnVisible ? '表示中 (1列レイアウト)' : '非表示 (2列レイアウト)'}`);
+                }
             });
         });
 
