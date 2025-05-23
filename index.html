@@ -36,29 +36,34 @@
         .toggle-button {
             @apply px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-150 ease-in-out shadow-md;
         }
+        /* チェックされた行のスタイル */
+        .checked-row {
+            background-color: #e0f2fe; /* light blue-100 */
+        }
     </style>
 </head>
-<body class="bg-gray-100 flex flex-col items-center justify-center min-h-screen p-4">
-    <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-7xl">
-        <h1 class="text-4xl font-bold text-gray-800 mb-6 text-center">アグリコラ 全カードリスト</h1>
+<body class="bg-gray-100 flex flex-col items-center justify-center min-h-screen p-2">
+    <div class="bg-white p-4 rounded-lg shadow-xl w-full max-w-7xl">
+        <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-4 text-center">アグリコラ 全カードリスト</h1>
 
-        <div class="flex justify-center mb-6 gap-4">
-            <button id="toggle-details-button" class="toggle-button">詳細を表示/非表示</button>
+        <div class="flex justify-center mb-4 gap-2">
+            <button id="toggle-details-button" class="toggle-button text-sm">詳細を表示/非表示</button>
         </div>
 
-        <div class="flex flex-col md:flex-row gap-8">
+        <div class="flex flex-col md:flex-row gap-4">
             <div class="card-section flex-1">
-                <h2 class="text-2xl font-semibold text-gray-700 mb-4 text-center">小進歩カード</h2>
+                <h2 class="text-xl sm:text-2xl font-semibold text-gray-700 mb-3 text-center">小進歩カード</h2>
                 <div class="table-container-scrollable shadow-sm">
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">名称</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">効果</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden-column detail-column">評価点</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden-column detail-column">種類</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden-column detail-column">評価</th>
+                                <th scope="col" class="px-2 py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"></th>
+                                <th scope="col" class="px-2 py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                                <th scope="col" class="px-2 py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">名称</th>
+                                <th scope="col" class="px-2 py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">効果</th>
+                                <th scope="col" class="px-2 py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden-column detail-column">評価点</th>
+                                <th scope="col" class="px-2 py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden-column detail-column">種類</th>
+                                <th scope="col" class="px-2 py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden-column detail-column">評価</th>
                             </tr>
                         </thead>
                         <tbody id="small-improvement-body" class="bg-white divide-y divide-gray-200">
@@ -68,17 +73,18 @@
             </div>
 
             <div class="card-section flex-1">
-                <h2 class="text-2xl font-semibold text-gray-700 mb-4 text-center">職業カード</h2>
+                <h2 class="text-xl sm:text-2xl font-semibold text-gray-700 mb-3 text-center">職業カード</h2>
                 <div class="table-container-scrollable shadow-sm">
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">名称</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">効果</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden-column detail-column">評価点</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden-column detail-column">種類</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden-column detail-column">評価</th>
+                                <th scope="col" class="px-2 py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"></th>
+                                <th scope="col" class="px-2 py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                                <th scope="col" class="px-2 py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">名称</th>
+                                <th scope="col" class="px-2 py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">効果</th>
+                                <th scope="col" class="px-2 py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden-column detail-column">評価点</th>
+                                <th scope="col" class="px-2 py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden-column detail-column">種類</th>
+                                <th scope="col" class="px-2 py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden-column detail-column">評価</th>
                             </tr>
                         </thead>
                         <tbody id="job-card-body" class="bg-white divide-y divide-gray-200">
@@ -180,39 +186,51 @@ E108,ブラックベリー農家,柵を建設するたびに、建設した柵�
                     const type = cleanColumns[4]; // Type (Small Improvement / Job)
                     const evaluation = cleanColumns[5]; // Evaluation (Too Strong / Too Weak)
 
+                    // Checkbox cell
+                    const tdCheckbox = document.createElement('td');
+                    tdCheckbox.className = 'px-2 py-1 whitespace-nowrap';
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.className = 'form-checkbox h-3 w-3 text-blue-600 rounded'; // チェックボックスを小さく
+                    checkbox.addEventListener('change', (event) => {
+                        if (event.target.checked) {
+                            tr.classList.add('checked-row');
+                        } else {
+                            tr.classList.remove('checked-row');
+                        }
+                    });
+                    tdCheckbox.appendChild(checkbox);
+                    tr.appendChild(tdCheckbox);
+
+
                     // Create and append each cell
                     const tdId = document.createElement('td');
-                    tdId.className = 'px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900';
+                    tdId.className = 'px-2 py-1 whitespace-nowrap text-sm font-medium text-gray-900';
                     tdId.textContent = id;
                     tr.appendChild(tdId);
 
                     const tdName = document.createElement('td');
-                    // 名称の列はテキストを折り返すように変更
-                    tdName.className = 'px-6 py-4 text-sm text-gray-900 wrap-text';
+                    tdName.className = 'px-2 py-1 text-sm text-gray-900 whitespace-nowrap'; // 名称は改行しない
                     tdName.textContent = name;
                     tr.appendChild(tdName);
 
                     const tdEffect = document.createElement('td');
-                    // 効果の文字サイズを小さくし、テキストを折り返すように設定
-                    tdEffect.className = 'px-6 py-4 text-xs text-gray-500 wrap-text';
+                    tdEffect.className = 'px-2 py-1 text-xs text-gray-500 wrap-text'; // 効果は文字サイズ小さく、折り返す
                     tdEffect.textContent = effect;
                     tr.appendChild(tdEffect);
 
                     const tdRating = document.createElement('td');
-                    // デフォルトで非表示にする
-                    tdRating.className = 'px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden-column detail-column';
+                    tdRating.className = 'px-2 py-1 whitespace-nowrap text-sm text-gray-500 hidden-column detail-column';
                     tdRating.textContent = rating;
                     tr.appendChild(tdRating);
 
                     const tdType = document.createElement('td');
-                    // デフォルトで非表示にする
-                    tdType.className = 'px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden-column detail-column';
+                    tdType.className = 'px-2 py-1 whitespace-nowrap text-sm text-gray-500 hidden-column detail-column';
                     tdType.textContent = type;
                     tr.appendChild(tdType);
 
                     const tdEvaluation = document.createElement('td');
-                    // デフォルトで非表示にする
-                    tdEvaluation.className = 'px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden-column detail-column';
+                    tdEvaluation.className = 'px-2 py-1 whitespace-nowrap text-sm text-gray-500 hidden-column detail-column';
                     tdEvaluation.textContent = evaluation;
                     tr.appendChild(tdEvaluation);
 
