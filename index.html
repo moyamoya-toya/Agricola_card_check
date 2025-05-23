@@ -24,11 +24,27 @@
             background-color: #f9fafb; /* bg-gray-50 */
             z-index: 10;
         }
+        /* 効果のセル内のテキストが折り返されるようにする */
+        .wrap-text {
+            white-space: normal;
+        }
+        /* 非表示にする列のスタイル */
+        .hidden-column {
+            display: none;
+        }
+        /* ボタンのスタイル */
+        .toggle-button {
+            @apply px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-150 ease-in-out shadow-md;
+        }
     </style>
 </head>
 <body class="bg-gray-100 flex flex-col items-center justify-center min-h-screen p-4">
     <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-7xl">
         <h1 class="text-4xl font-bold text-gray-800 mb-6 text-center">アグリコラ 全カードリスト</h1>
+
+        <div class="flex justify-center mb-6 gap-4">
+            <button id="toggle-details-button" class="toggle-button">詳細を表示/非表示</button>
+        </div>
 
         <div class="flex flex-col md:flex-row gap-8">
             <div class="card-section flex-1">
@@ -40,9 +56,9 @@
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">名称</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">効果</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">評価点</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">種類</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">評価</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden-column detail-column">評価点</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden-column detail-column">種類</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden-column detail-column">評価</th>
                             </tr>
                         </thead>
                         <tbody id="small-improvement-body" class="bg-white divide-y divide-gray-200">
@@ -60,9 +76,9 @@
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">名称</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">効果</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">評価点</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">種類</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">評価</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden-column detail-column">評価点</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden-column detail-column">種類</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden-column detail-column">評価</th>
                             </tr>
                         </thead>
                         <tbody id="job-card-body" class="bg-white divide-y divide-gray-200">
@@ -171,27 +187,32 @@ E108,ブラックベリー農家,柵を建設するたびに、建設した柵�
                     tr.appendChild(tdId);
 
                     const tdName = document.createElement('td');
-                    tdName.className = 'px-6 py-4 whitespace-nowrap text-sm text-gray-900';
+                    // 名称の列はテキストを折り返すように変更
+                    tdName.className = 'px-6 py-4 text-sm text-gray-900 wrap-text';
                     tdName.textContent = name;
                     tr.appendChild(tdName);
 
                     const tdEffect = document.createElement('td');
-                    tdEffect.className = 'px-6 py-4 text-sm text-gray-500';
+                    // 効果の文字サイズを小さくし、テキストを折り返すように設定
+                    tdEffect.className = 'px-6 py-4 text-xs text-gray-500 wrap-text';
                     tdEffect.textContent = effect;
                     tr.appendChild(tdEffect);
 
                     const tdRating = document.createElement('td');
-                    tdRating.className = 'px-6 py-4 whitespace-nowrap text-sm text-gray-500';
+                    // デフォルトで非表示にする
+                    tdRating.className = 'px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden-column detail-column';
                     tdRating.textContent = rating;
                     tr.appendChild(tdRating);
 
                     const tdType = document.createElement('td');
-                    tdType.className = 'px-6 py-4 whitespace-nowrap text-sm text-gray-500';
+                    // デフォルトで非表示にする
+                    tdType.className = 'px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden-column detail-column';
                     tdType.textContent = type;
                     tr.appendChild(tdType);
 
                     const tdEvaluation = document.createElement('td');
-                    tdEvaluation.className = 'px-6 py-4 whitespace-nowrap text-sm text-gray-500';
+                    // デフォルトで非表示にする
+                    tdEvaluation.className = 'px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden-column detail-column';
                     tdEvaluation.textContent = evaluation;
                     tr.appendChild(tdEvaluation);
 
@@ -205,6 +226,14 @@ E108,ブラックベリー農家,柵を建設するたびに、建設した柵�
             displayCsv(smallImprovementCsvText, 'small-improvement-body');
             // Display Job Cards
             displayCsv(jobCardCsvText, 'job-card-body');
+
+            const toggleButton = document.getElementById('toggle-details-button');
+            toggleButton.addEventListener('click', () => {
+                const detailColumns = document.querySelectorAll('.detail-column');
+                detailColumns.forEach(col => {
+                    col.classList.toggle('hidden-column');
+                });
+            });
         });
     </script>
 </body>
