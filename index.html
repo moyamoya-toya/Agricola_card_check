@@ -43,9 +43,10 @@
             border-bottom: 1px solid #e5e7eb; /* border-b border-gray-200 */
         }
 
-        /* 個別の垂直スクロール */
+        /* 個別の垂直スクロールと横スクロール */
         .table-wrapper {
             overflow-y: auto;
+            overflow-x: auto; /* 横スクロールを追加 */
             flex: 1; /* 残りのスペースを埋める */
         }
 
@@ -100,7 +101,8 @@
         .effect-text {
             font-size: 0.875rem; /* text-sm */
             line-height: 1.25rem; /* leading-5 */
-            word-break: break-word; /* 長い単語でも折り返す */
+            white-space: nowrap; /* テキストを折り返さず1行で表示 */
+            min-width: 200px; /* 例: 最小幅を設定して横スクロールを有効にする */
         }
 
         /* 非表示列のスタイル */
@@ -129,11 +131,9 @@
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"></th>
                                 <th scope="col" class="px-6 py-3 text-left text-lg font-medium text-gray-500 uppercase tracking-wider">ID</th>
                                 <th scope="col" class="px-6 py-3 text-left text-lg font-medium text-gray-500 uppercase tracking-wider">名称</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider effect-small-col hidden-column">効果</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider rating-small-col hidden-column">評価点</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider type-small-col hidden-column">種類</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider evaluation-small-col hidden-column">評価</th>
-                            </tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider effect-small hidden-column">効果</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider rating-small hidden-column">評価点</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider type-small hidden-column">種類</th> <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider evaluation-small hidden-column">カード評価</th> </tr>
                         </thead>
                         <tbody id="small-improvements-table-body" class="bg-white divide-y divide-gray-200">
                             </tbody>
@@ -156,11 +156,9 @@
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"></th>
                                 <th scope="col" class="px-6 py-3 text-left text-lg font-medium text-gray-500 uppercase tracking-wider">ID</th>
                                 <th scope="col" class="px-6 py-3 text-left text-lg font-medium text-gray-500 uppercase tracking-wider">名称</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider effect-job-col hidden-column">効果</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider rating-job-col hidden-column">評価点</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider type-job-col hidden-column">種類</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider evaluation-job-col hidden-column">評価</th>
-                            </tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider effect-job hidden-column">効果</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider rating-job hidden-column">評価点</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider type-job hidden-column">種類</th> <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider evaluation-job hidden-column">カード評価</th> </tr>
                         </thead>
                         <tbody id="job-cards-table-body" class="bg-white divide-y divide-gray-200">
                             </tbody>
@@ -172,9 +170,9 @@
 
     <script>
         // 小進歩カードのCSVデータURL
-        const smallImprovementsURL = 'https://raw.githubusercontent.com/moyamoya-toya/Agricola_card_check/main/%E3%82%A2%E3%82%B0%E3%83%AA%E3%82%B3%E3%83%A9%E7%A6%81%E6%AD%A2%E3%82%AB%E3%83%BC%E3%83%89%20-%20%E5%B0%8F%E9%80%B2%E6%AD%A9.csv';
+        const smallImprovementsURL = 'https://raw.githubusercontent.com/moyamoya-toya/Agricola_card_check/main/アグリコラ禁止カード - 小進歩.csv';
         // 職業カードのCSVデータURL
-        const jobCardsURL = 'https://raw.githubusercontent.com/moyamoya-toya/Agricola_card_check/main/%E3%82%A2%E3%82%B0%E3%83%AA%E3%82%B3%E3%83%A9%E7%A6%81%E6%AD%A2%E3%82%AB%E3%83%BC%E3%83%89%20-%20%E8%81%B7%E6%A5%AD.csv';
+        const jobCardsURL = 'https://raw.githubusercontent.com/moyamoya-toya/Agricola_card_check/main/アグリコラ禁止カード - 職業.csv';
 
         /**
          * CSV文字列をパースしてオブジェクトの配列に変換します。
@@ -183,12 +181,17 @@
          */
         function parseCSV(csvString) {
             const lines = csvString.trim().split('\n');
-            const headers = lines[0].split(',');
+            // Clean headers: remove BOM and other non-printable characters, then trim.
+            const rawHeaders = lines[0].split(',');
+            const headers = rawHeaders.map(header => header.replace(/[\uFEFF\u0000-\u001F\u007F-\u009F]/g, '').trim()); // Added \uFEFF for BOM
+
+            console.log("Parsed Headers:", headers); // Debugging line
+
             return lines.slice(1).map(line => {
                 const values = line.split(',');
                 const row = {};
                 headers.forEach((header, index) => {
-                    row[header.trim()] = values[index].trim();
+                    row[header] = values[index] ? values[index].trim() : ''; // Handle potential missing values
                 });
                 return row;
             });
@@ -205,16 +208,17 @@
             data.forEach(card => {
                 const row = document.createElement('tr');
                 row.classList.add('selectable-row', 'hover:bg-gray-50', 'transition', 'duration-150', 'ease-in-out');
+                // ここで `card.種類` と `card.評価` の代わりに、CSVのヘッダー名を使用します
                 row.innerHTML = `
                     <td class="px-6 py-4 whitespace-nowrap">
                         <input type="checkbox" class="custom-checkbox">
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-lg font-medium text-gray-900">${card.ID}</td>
-                    <td class="px-6 py-4 whitespace-nowrap-custom text-lg font-medium text-gray-900">${card.名称}</td>
-                    <td class="px-6 py-4 effect-text text-gray-500 ${typePrefix}-effect-col hidden-column">${card.効果}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-gray-500 ${typePrefix}-rating-col hidden-column">${card.評価点}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-gray-500 ${typePrefix}-type-col hidden-column">${card.種類}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-gray-500 ${typePrefix}-evaluation-col hidden-column">${card.評価}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-lg font-medium text-gray-900">${card.ID || ''}</td>
+                    <td class="px-6 py-4 whitespace-nowrap-custom text-lg font-medium text-gray-900">${card.名称 || ''}</td>
+                    <td class="px-6 py-4 effect-text text-gray-500 effect-${typePrefix} hidden-column">${card.効果 || ''}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-gray-500 rating-${typePrefix} hidden-column">${card.評価点 || ''}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-gray-500 type-${typePrefix} hidden-column">${card.種類 || ''}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-gray-500 evaluation-${typePrefix} hidden-column">${card.カード評価 || ''}</td>
                 `;
                 tableBodyElement.appendChild(row);
 
@@ -258,6 +262,7 @@
             const smallImprovementsCSV = await fetchCSV(smallImprovementsURL);
             if (smallImprovementsCSV) {
                 const smallImprovementsData = parseCSV(smallImprovementsCSV);
+                console.log("小進歩カードのデータ (最初のカード):", smallImprovementsData[0]); // Debugging line
                 renderTable(smallImprovementsData, smallImprovementsTableBody, 'small');
             } else {
                 smallImprovementsTableBody.innerHTML = '<tr><td colspan="7" class="px-6 py-4 text-center text-red-500">小進歩カードデータの読み込みに失敗しました。</td></tr>';
@@ -267,6 +272,7 @@
             const jobCardsCSV = await fetchCSV(jobCardsURL);
             if (jobCardsCSV) {
                 const jobCardsData = parseCSV(jobCardsCSV);
+                console.log("職業カードのデータ (最初のカード):", jobCardsData[0]); // Debugging line
                 renderTable(jobCardsData, jobCardsTableBody, 'job');
             } else {
                 jobCardsTableBody.innerHTML = '<tr><td colspan="7" class="px-6 py-4 text-center text-red-500">職業カードデータの読み込みに失敗しました。</td></tr>';
@@ -276,15 +282,34 @@
             document.querySelectorAll('.toggle-column-btn').forEach(button => {
                 button.addEventListener('click', (event) => {
                     const columnType = event.target.dataset.column; // 例: 'effect-small'
-                    const columnClass = `${columnType}-col`; // 例: 'effect-small-col'
+                    const selector = `.${columnType}`;
+
+                    console.log(`ボタンがクリックされました: ${event.target.textContent}`);
+                    console.log(`トグルされる列のCSSセレクタ: ${selector}`);
 
                     // ヘッダーとボディのセルをすべて取得
-                    const headerCells = document.querySelectorAll(`th.${columnClass}`);
-                    const bodyCells = document.querySelectorAll(`td.${columnClass}`);
+                    const headerCells = document.querySelectorAll(`th${selector}`);
+                    const bodyCells = document.querySelectorAll(`td${selector}`);
+
+                    console.log(`セレクタ ${selector} で見つかったヘッダーセル数: ${headerCells.length}`);
+                    console.log(`セレクタ ${selector} で見つかったボディセル数: ${bodyCells.length}`);
 
                     // 各セルでhidden-columnクラスをトグル
-                    headerCells.forEach(cell => cell.classList.toggle('hidden-column'));
-                    bodyCells.forEach(cell => cell.classList.toggle('hidden-column'));
+                    headerCells.forEach(cell => {
+                        const wasHidden = cell.classList.contains('hidden-column');
+                        cell.classList.toggle('hidden-column');
+                        const isHidden = cell.classList.contains('hidden-column');
+                        console.log(`ヘッダーセル (${cell.textContent.trim()}) の hidden-column クラスが ${wasHidden ? 'あった' : 'なかった'} -> ${isHidden ? 'ある' : 'ない'} に変わりました。`);
+                    });
+                    bodyCells.forEach(cell => {
+                        const wasHidden = cell.classList.contains('hidden-column');
+                        cell.classList.toggle('hidden-column');
+                        const isHidden = cell.classList.contains('hidden-column');
+                        console.log(`ボディセル (${cell.textContent.trim().substring(0, 20)}...) の hidden-column クラスが ${wasHidden ? 'あった' : 'なかった'} -> ${isHidden ? 'ある' : 'ない'} に変わりました。`);
+                        if (!isHidden) { // If it's now visible
+                            console.log(`表示されるボディセルのテキスト: "${cell.textContent.trim()}"`);
+                        }
+                    });
                 });
             });
         });
