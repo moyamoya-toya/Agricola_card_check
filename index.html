@@ -5,167 +5,116 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>アグリコラ 全カードリスト</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Interフォントのインポート */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
         body {
             font-family: 'Inter', sans-serif;
-            /* ページ全体に余白がないように設定 */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
             margin: 0;
             padding: 0;
-            /* 背景が灰色 */
-            background-color: #f3f4f6; /* Tailwind's gray-100 */
-            min-height: 100vh; /* ページ全体が上下いっぱいに広がるように */
+            height: 100vh; /* Ensure full viewport height */
             display: flex;
             flex-direction: column;
+            background-color: #f3f4f6; /* Page background color */
+            width: 100vw; /* Ensure body takes full viewport width */
         }
-
-        /* 各リストのコンテナ */
-        .card-list-container {
-            background-color: #ffffff; /* リスト自体は白色 */
-            border-radius: 0.5rem; /* rounded-lg */
-            overflow: hidden; /* 子要素の丸みを維持 */
-            display: flex;
-            flex-direction: column;
-            flex: 1; /* 親要素の高さに合わせて伸長 */
-            min-height: 0; /* flexアイテムの最小高さを設定 */
-        }
-
-        /* テーブルヘッダーの固定 */
-        .sticky-header th {
-            position: sticky;
-            top: 0;
-            background-color: #f9fafb; /* Tailwind's gray-50 for header background */
-            z-index: 10;
-            padding-top: 0.75rem; /* py-3 */
-            padding-bottom: 0.75rem; /* py-3 */
-            border-bottom: 1px solid #e5e7eb; /* border-b border-gray-200 */
-        }
-
-        /* 個別の垂直スクロールと横スクロール */
-        .table-wrapper {
-            overflow-y: auto;
-            overflow-x: auto; /* 横スクロールを追加 */
-            flex: 1; /* 残りのスペースを埋める */
-        }
-
-        /* チェックボックスのスタイル調整 */
-        .custom-checkbox {
-            appearance: none; /* デフォルトのチェックボックスの外観を削除 */
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            width: 1rem; /* サイズを小さく */
-            height: 1rem; /* サイズを小さく */
-            border: 1px solid #d1d5db; /* border-gray-300 */
-            border-radius: 0.25rem; /* rounded */
-            background-color: #fff;
-            cursor: pointer;
-            vertical-align: middle;
-            position: relative;
-            pointer-events: none; /* 直接クリック不可 */
-        }
-
-        .custom-checkbox:checked {
-            background-color: #2563eb; /* bg-blue-600 */
-            border-color: #2563eb; /* border-blue-600 */
-        }
-
-        .custom-checkbox:checked::after {
-            content: '';
-            position: absolute;
-            left: 0.25rem;
-            top: 0.05rem;
-            width: 0.25rem;
-            height: 0.5rem;
-            border: solid white;
-            border-width: 0 2px 2px 0;
-            transform: rotate(45deg);
-        }
-
-        /* 行のクリックでチェックボックスを切り替えるためのスタイル */
-        .selectable-row {
-            cursor: pointer;
-        }
-
-        .selectable-row.selected {
-            background-color: #e0f2fe; /* light blue */
-        }
-
-        /* 「名称」列の改行禁止 */
-        .whitespace-nowrap-custom {
-            white-space: nowrap;
-        }
-
-        /* 「効果」列の文字サイズと折り返し */
-        .effect-text {
-            font-size: 0.875rem; /* text-sm */
-            line-height: 1.25rem; /* leading-5 */
-            word-break: break-word; /* 長い単語でも折り返す */
-            min-width: 200px; /* 例: 最小幅を設定して横スクロールを有効にする */
-        }
-
-        /* 非表示列のスタイル */
+        /* Custom CSS for hidden columns */
         .hidden-column {
             display: none;
         }
+        /* Custom CSS to prevent direct checkbox clicks */
+        .checkbox-container {
+            pointer-events: none; /* Prevents direct clicks on the checkbox itself */
+        }
+        /* Ensure table cells wrap text for '効果' column */
+        .effect-cell {
+            word-break: break-word; /* Automatically wrap long text */
+            white-space: normal; /* Allow normal white-space handling */
+        }
+        /* Prevent '名称' column from wrapping */
+        .name-cell {
+            white-space: nowrap;
+        }
+        /* Sticky header for tables */
+        .sticky-header th {
+            position: sticky;
+            top: 0;
+            background-color: #ffffff; /* Ensure header background is white */
+            z-index: 10; /* Ensure header stays on top of scrolling content */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Optional: subtle shadow for sticky effect */
+        }
+        /* Scrollbar styling for individual lists */
+        .card-list-container {
+            overflow-y: auto; /* Enable vertical scrolling */
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+            flex-grow: 1; /* Allow container to grow and take available space */
+        }
+        /* Horizontal scroll for the entire table */
+        .table-wrapper {
+            overflow-x: auto;
+        }
     </style>
 </head>
-<body class="flex flex-col min-h-screen p-0">
-    <div class="container mx-auto px-4 py-6 flex-grow flex flex-col">
-        <h1 class="text-3xl lg:text-4xl font-bold text-center mb-6 text-gray-800">アグリコラ 全カードリスト</h1>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+    <div class="flex flex-col flex-grow w-full h-full">
+        <h1 class="text-3xl font-bold text-center mb-6 text-gray-800 pt-4">アグリコラ 全カードリスト</h1>
 
-        <div class="flex flex-row space-x-6 flex-grow">
-            <div class="card-list-container shadow-lg">
-                <h2 class="text-2xl font-semibold text-gray-700 p-4 border-b border-gray-200">小進歩カード</h2>
-                <div class="p-4 flex flex-wrap gap-2 border-b border-gray-200">
-                    <button class="toggle-column-btn px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-200" data-column="effect-small">効果</button>
-                    <button class="toggle-column-btn px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-200" data-column="rating-small">評価点</button>
-                    <button class="toggle-column-btn px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-200" data-column="type-small">種類</button>
-                    <button class="toggle-column-btn px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-200" data-column="evaluation-small">評価</button>
-                </div>
-                <div class="table-wrapper">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="sticky-header">
+        <div class="flex flex-wrap justify-center gap-2 mb-6 px-4">
+            <button class="px-4 py-2 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 transition-colors duration-200" data-column="effect-col">効果</button>
+            <button class="px-4 py-2 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 transition-colors duration-200" data-column="rating-col">評価点</button>
+            <button class="px-4 py-2 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 transition-colors duration-200" data-column="type-col">種類</button>
+            <button class="px-4 py-2 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 transition-colors duration-200" data-column="card-rating-col">カード評価</button>
+        </div>
+
+        <div id="error-message" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg relative mb-4 mx-4" role="alert">
+            <strong class="font-bold">エラー:</strong>
+            <span class="block sm:inline" id="error-text">データの取得に失敗しました。</span>
+        </div>
+
+        <div class="flex flex-row flex-grow w-full gap-6 px-4 pb-4">
+            <div class="bg-white rounded-lg shadow-lg p-4 flex flex-col flex-grow w-full w-1/2 overflow-hidden">
+                <h2 class="text-2xl font-semibold text-gray-700 mb-4 text-center">小進歩カード</h2>
+                <div class="table-wrapper card-list-container">
+                    <table id="small-improvement-table" class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50 sticky-header">
                             <tr>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"></th>
-                                <th scope="col" class="px-6 py-3 text-left text-lg font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                                <th scope="col" class="px-6 py-3 text-left text-lg font-medium text-gray-500 uppercase tracking-wider">名称</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider effect-small hidden-column">効果</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider rating-small hidden-column">評価点</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider type-small hidden-column">種類</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider evaluation-small hidden-column">カード評価</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-12">
+                                    <div class="checkbox-container"></div> </th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-xl">ID</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-xl">名称</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden-column effect-col text-sm">効果</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden-column rating-col">評価点</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden-column type-col">種類</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden-column card-rating-col">カード評価</th>
                             </tr>
                         </thead>
-                        <tbody id="small-improvements-table-body" class="bg-white divide-y divide-gray-200">
-                            </tbody>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <tr><td colspan="7" class="text-center py-4 text-gray-500">データを読み込み中...</td></tr>
+                        </tbody>
                     </table>
                 </div>
             </div>
 
-            <div class="card-list-container shadow-lg">
-                <h2 class="text-2xl font-semibold text-gray-700 p-4 border-b border-gray-200">職業カード</h2>
-                <div class="p-4 flex flex-wrap gap-2 border-b border-gray-200">
-                    <button class="toggle-column-btn px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-200" data-column="effect-job">効果</button>
-                    <button class="toggle-column-btn px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-200" data-column="rating-job">評価点</button>
-                    <button class="toggle-column-btn px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-200" data-column="type-job">種類</button>
-                    <button class="toggle-column-btn px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-200" data-column="evaluation-job">評価</button>
-                </div>
-                <div class="table-wrapper">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="sticky-header">
+            <div class="bg-white rounded-lg shadow-lg p-4 flex flex-col flex-grow w-full w-1/2 overflow-hidden">
+                <h2 class="text-2xl font-semibold text-gray-700 mb-4 text-center">職業カード</h2>
+                <div class="table-wrapper card-list-container">
+                    <table id="occupation-table" class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50 sticky-header">
                             <tr>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"></th>
-                                <th scope="col" class="px-6 py-3 text-left text-lg font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                                <th scope="col" class="px-6 py-3 text-left text-lg font-medium text-gray-500 uppercase tracking-wider">名称</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider effect-job hidden-column">効果</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider rating-job hidden-column">評価点</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider type-job hidden-column">種類</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider evaluation-job hidden-column">カード評価</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-12">
+                                    <div class="checkbox-container"></div> </th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-xl">ID</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-xl">名称</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden-column effect-col text-sm">効果</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden-column rating-col">評価点</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden-column type-col">種類</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden-column card-rating-col">カード評価</th>
                             </tr>
                         </thead>
-                        <tbody id="job-cards-table-body" class="bg-white divide-y divide-gray-200">
-                            </tbody>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <tr><td colspan="7" class="text-center py-4 text-gray-500">データを読み込み中...</td></tr>
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -173,149 +122,193 @@
     </div>
 
     <script>
-        // 小進歩カードのCSVデータURL
-        const smallImprovementsURL = 'https://raw.githubusercontent.com/moyamoya-toya/Agricola_card_check/main/アグリコラ禁止カード - 小進歩.csv';
-        // 職業カードのCSVデータURL
-        const jobCardsURL = 'https://raw.githubusercontent.com/moyamoya-toya/Agricola_card_check/main/アグリコラ禁止カード - 職業.csv';
-
-        /**
-         * CSV文字列をパースしてオブジェクトの配列に変換します。
-         * @param {string} csvString - CSVデータを含む文字列。
-         * @returns {Array<Object>} パースされたデータの配列。
-         */
-        function parseCSV(csvString) {
-            const lines = csvString.trim().split('\n');
-            // Clean headers: remove BOM and other non-printable characters, then trim.
-            const rawHeaders = lines[0].split(',');
-            const headers = rawHeaders.map(header => header.replace(/[\uFEFF\u0000-\u001F\u007F-\u009F]/g, '').trim()); // Added \uFEFF for BOM
-
-            console.log("Parsed Headers:", headers); // Debugging line
-
-            return lines.slice(1).map(line => {
-                const values = line.split(',');
-                const row = {};
-                headers.forEach((header, index) => {
-                    row[header] = values[index] ? values[index].trim() : ''; // Handle potential missing values
-                });
-                return row;
-            });
+        // Function to display error messages
+        function displayError(message) {
+            const errorMessageDiv = document.getElementById('error-message');
+            const errorTextSpan = document.getElementById('error-text');
+            errorTextSpan.textContent = message;
+            errorMessageDiv.classList.remove('hidden');
         }
 
-        /**
-         * カードデータをHTMLテーブルにレンダリングします。
-         * @param {Array<Object>} data - レンダーするカードデータの配列。
-         * @param {HTMLElement} tableBodyElement - テーブルのtbody要素。
-         * @param {string} typePrefix - 列のクラス名に付加するプレフィックス (例: 'small', 'job')。
-         */
-        function renderTable(data, tableBodyElement, typePrefix) {
-            tableBodyElement.innerHTML = ''; // 既存の行をクリア
-            data.forEach(card => {
-                const row = document.createElement('tr');
-                row.classList.add('selectable-row', 'hover:bg-gray-50', 'transition', 'duration-150', 'ease-in-out');
-                row.innerHTML = `
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <input type="checkbox" class="custom-checkbox">
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-lg font-medium text-gray-900">${card.ID || ''}</td>
-                    <td class="px-6 py-4 whitespace-nowrap-custom text-lg font-medium text-gray-900">${card.名称 || ''}</td>
-                    <td class="px-6 py-4 effect-text text-gray-500 effect-${typePrefix} hidden-column">${card.効果 || ''}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-gray-500 rating-${typePrefix} hidden-column">${card.評価点 || ''}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-gray-500 type-${typePrefix} hidden-column">${card.種類 || ''}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-gray-500 evaluation-${typePrefix} hidden-column">${card.カード評価 || ''}</td>
-                `;
-                tableBodyElement.appendChild(row);
+        // Function to parse CSV data
+        function parseCSV(csvText) {
+            const lines = csvText.trim().split('\n');
+            if (lines.length === 0) {
+                return { headers: [], data: [] };
+            }
 
-                // 行クリックでチェックボックスを切り替えるイベントリスナー
-                row.addEventListener('click', () => {
-                    const checkbox = row.querySelector('.custom-checkbox');
-                    checkbox.checked = !checkbox.checked;
-                    if (checkbox.checked) {
-                        row.classList.add('selected');
+            // Split header by comma, trim whitespace, and remove BOM if present
+            const headers = lines[0].split(',').map(header => header.trim().replace(/^\ufeff/, ''));
+            const data = [];
+
+            for (let i = 1; i < lines.length; i++) {
+                const values = [];
+                let inQuote = false;
+                let currentVal = '';
+                for (let j = 0; j < lines[i].length; j++) {
+                    const char = lines[i][j];
+                    if (char === '"') {
+                        inQuote = !inQuote;
+                    } else if (char === ',' && !inQuote) {
+                        values.push(currentVal.trim());
+                        currentVal = '';
                     } else {
-                        row.classList.remove('selected');
+                        currentVal += char;
+                    }
+                }
+                values.push(currentVal.trim()); // Push the last value
+
+                // Ensure the number of values matches the number of headers
+                if (values.length === headers.length) {
+                    const row = {};
+                    headers.forEach((header, index) => {
+                        row[header] = values[index];
+                    });
+                    data.push(row);
+                } else {
+                    console.warn(`Skipping malformed row: "${lines[i]}" - Expected ${headers.length} columns, got ${values.length}`);
+                }
+            }
+            return { headers, data };
+        }
+
+        // Function to render card data into a table
+        function renderTable(tableId, cardData) {
+            const tbody = document.querySelector(`#${tableId} tbody`);
+            tbody.innerHTML = ''; // Clear loading message
+
+            if (cardData.length === 0) {
+                const row = tbody.insertRow();
+                const cell = row.insertCell();
+                cell.colSpan = 7;
+                cell.className = 'text-center py-4 text-gray-500';
+                cell.textContent = 'カードデータがありません。';
+                return;
+            }
+
+            cardData.forEach(card => {
+                const row = tbody.insertRow();
+                row.classList.add('hover:bg-gray-50', 'transition-colors', 'duration-150', 'cursor-pointer');
+
+                // Add click listener to the row
+                row.addEventListener('click', function() {
+                    const checkbox = this.querySelector('input[type="checkbox"]');
+                    if (checkbox) {
+                        checkbox.checked = !checkbox.checked;
+                        if (checkbox.checked) {
+                            this.classList.add('bg-blue-100');
+                        } else {
+                            this.classList.remove('bg-blue-100');
+                        }
                     }
                 });
+
+                // Checkbox cell
+                const checkboxCell = row.insertCell();
+                checkboxCell.className = 'px-4 py-2 whitespace-nowrap text-sm font-medium text-gray-900';
+                checkboxCell.innerHTML = `
+                    <div class="checkbox-container">
+                        <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600 rounded" style="pointer-events: none;">
+                    </div>
+                `;
+
+                // ID cell
+                const idCell = row.insertCell();
+                idCell.className = 'px-4 py-2 whitespace-nowrap text-lg font-bold text-gray-900';
+                idCell.textContent = card['ID'];
+
+                // 名称 cell
+                const nameCell = row.insertCell();
+                nameCell.className = 'px-4 py-2 text-lg font-semibold text-gray-800 name-cell';
+                nameCell.textContent = card['名称'];
+
+                // 効果 cell (initially hidden)
+                const effectCell = row.insertCell();
+                effectCell.className = 'px-4 py-2 text-gray-700 hidden-column effect-col text-xs effect-cell';
+                effectCell.textContent = card['効果'];
+
+                // 評価点 cell (initially hidden)
+                const ratingCell = row.insertCell();
+                ratingCell.className = 'px-4 py-2 whitespace-nowrap text-gray-700 hidden-column rating-col';
+                ratingCell.textContent = card['評価点'];
+
+                // 種類 cell (initially hidden)
+                const typeCell = row.insertCell();
+                typeCell.className = 'px-4 py-2 whitespace-nowrap text-gray-700 hidden-column type-col';
+                typeCell.textContent = card['種類'];
+
+                // カード評価 cell (initially hidden)
+                const cardRatingCell = row.insertCell();
+                cardRatingCell.className = 'px-4 py-2 whitespace-nowrap text-gray-700 hidden-column card-rating-col';
+                // The CSV header for occupation card is "評価", but the small improvement card is "カード評価".
+                // To avoid issues, let's check both keys if one is not found.
+                cardRatingCell.textContent = card['カード評価'] || card['評価'];
             });
         }
 
-        /**
-         * 指定されたURLからCSVデータをフェッチします。
-         * @param {string} url - CSVデータのURL。
-         * @returns {Promise<string>} CSVデータを含む文字列を解決するPromise。
-         */
-        async function fetchCSV(url) {
+        // Main function to fetch and display data
+        async function loadCardData() {
+            // Updated URLs based on the user's latest prompt
+            const smallImprovementUrl = 'https://raw.githubusercontent.com/moyamoya-toya/Agricola_card_check/refs/heads/main/%E3%82%A2%E3%82%B0%E3%83%AA%E3%82%B3%E3%83%A9%E7%A6%81%E6%AD%A2%E3%82%AB%E3%83%BC%E3%83%89%20-%20%E5%B0%8F%E9%80%B2%E6%AD%A9.csv';
+            const occupationUrl = 'https://raw.githubusercontent.com/moyamoya-toya/Agricola_card_check/refs/heads/main/%E3%82%A2%E3%82%B0%E3%83%AA%E3%82%B3%E3%83%A9%E7%A6%81%E6%AD%A2%E3%82%AB%E3%83%BC%E3%83%89%20-%20%E8%81%B7%E6%A5%AD.csv';
+
             try {
-                const response = await fetch(url);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                // Fetch Small Improvement Cards
+                const smallImprovementResponse = await fetch(smallImprovementUrl);
+                if (!smallImprovementResponse.ok) {
+                    throw new Error(`小進歩カードデータの取得に失敗しました: ${smallImprovementResponse.statusText}`);
                 }
-                return await response.text();
+                const smallImprovementText = await smallImprovementResponse.text();
+                const { headers: siHeaders, data: siData } = parseCSV(smallImprovementText);
+                console.log('--- 小進歩カードデータ ---');
+                console.log('ヘッダー:', siHeaders);
+                if (siData.length > 0) {
+                    console.log('最初のカードデータ:', siData[0]);
+                }
+                renderTable('small-improvement-table', siData);
+
+                // Fetch Occupation Cards
+                const occupationResponse = await fetch(occupationUrl);
+                if (!occupationResponse.ok) {
+                    throw new Error(`職業カードデータの取得に失敗しました: ${occupationResponse.statusText}`);
+                }
+                const occupationText = await occupationResponse.text();
+                const { headers: occHeaders, data: occData } = parseCSV(occupationText);
+                console.log('--- 職業カードデータ ---');
+                console.log('ヘッダー:', occHeaders);
+                if (occData.length > 0) {
+                    console.log('最初のカードデータ:', occData[0]);
+                }
+                renderTable('occupation-table', occData);
+
             } catch (error) {
-                console.error('Error fetching CSV:', error);
-                return null; // エラー時はnullを返す
+                console.error('データの読み込み中にエラーが発生しました:', error);
+                displayError(error.message);
             }
         }
 
-        // DOMが完全にロードされた後に実行
-        document.addEventListener('DOMContentLoaded', async () => {
-            const smallImprovementsTableBody = document.getElementById('small-improvements-table-body');
-            const jobCardsTableBody = document.getElementById('job-cards-table-body');
+        // Column Toggle Logic
+        document.querySelectorAll('button[data-column]').forEach(button => {
+            button.addEventListener('click', function() {
+                const columnClass = this.dataset.column;
+                console.log(`ボタンクリック: 列 '${columnClass}' をトグルします。`);
 
-            // 小進歩カードデータをフェッチしてレンダリング
-            const smallImprovementsCSV = await fetchCSV(smallImprovementsURL);
-            if (smallImprovementsCSV) {
-                const smallImprovementsData = parseCSV(smallImprovementsCSV);
-                console.log("小進歩カードのデータ (最初のカード):", smallImprovementsData[0]); // Debugging line
-                renderTable(smallImprovementsData, smallImprovementsTableBody, 'small');
-            } else {
-                smallImprovementsTableBody.innerHTML = '<tr><td colspan="7" class="px-6 py-4 text-center text-red-500">小進歩カードデータの読み込みに失敗しました。</td></tr>';
-            }
+                // Toggle header visibility
+                document.querySelectorAll(`th.${columnClass}`).forEach(headerCell => {
+                    headerCell.classList.toggle('hidden-column');
+                    console.log(`ヘッダー '${headerCell.textContent.trim()}' の表示を切り替えました。`);
+                });
 
-            // 職業カードデータをフェッチしてレンダリング
-            const jobCardsCSV = await fetchCSV(jobCardsURL);
-            if (jobCardsCSV) {
-                const jobCardsData = parseCSV(jobCardsCSV);
-                console.log("職業カードのデータ (最初のカード):", jobCardsData[0]); // Debugging line
-                renderTable(jobCardsData, jobCardsTableBody, 'job');
-            } else {
-                jobCardsTableBody.innerHTML = '<tr><td colspan="7" class="px-6 py-4 text-center text-red-500">職業カードデータの読み込みに失敗しました。</td></tr>';
-            }
-
-            // 列の表示/非表示を切り替えるボタンのイベントリスナーを設定
-            document.querySelectorAll('.toggle-column-btn').forEach(button => {
-                button.addEventListener('click', (event) => {
-                    const columnType = event.target.dataset.column; // 例: 'effect-small'
-                    const selector = `.${columnType}`;
-
-                    console.log(`ボタンがクリックされました: ${event.target.textContent}`);
-                    console.log(`トグルされる列のCSSセレクタ: ${selector}`);
-
-                    // ヘッダーとボディのセルをすべて取得
-                    const headerCells = document.querySelectorAll(`th${selector}`);
-                    const bodyCells = document.querySelectorAll(`td${selector}`);
-
-                    console.log(`セレクタ ${selector} で見つかったヘッダーセル数: ${headerCells.length}`);
-                    console.log(`セレクタ ${selector} で見つかったボディセル数: ${bodyCells.length}`);
-
-                    // 各セルでhidden-columnクラスをトグル
-                    headerCells.forEach(cell => {
-                        const wasHidden = cell.classList.contains('hidden-column');
-                        cell.classList.toggle('hidden-column');
-                        const isHidden = cell.classList.contains('hidden-column');
-                        console.log(`ヘッダーセル (${cell.textContent.trim()}) の hidden-column クラスが ${wasHidden ? 'あった' : 'なかった'} -> ${isHidden ? 'ある' : 'ない'} に変わりました。`);
-                    });
-                    bodyCells.forEach(cell => {
-                        const wasHidden = cell.classList.contains('hidden-column');
-                        cell.classList.toggle('hidden-column');
-                        const isHidden = cell.classList.contains('hidden-column');
-                        console.log(`ボディセル (${cell.textContent.trim().substring(0, 20)}...) の hidden-column クラスが ${wasHidden ? 'あった' : 'なかった'} -> ${isHidden ? 'ある' : 'ない'} に変わりました。`);
-                        if (!isHidden) { // If it's now visible
-                            console.log(`表示されるボディセルのテキスト: "${cell.textContent.trim()}"`);
-                        }
-                    });
+                // Toggle body cell visibility
+                document.querySelectorAll(`td.${columnClass}`).forEach(bodyCell => {
+                    bodyCell.classList.toggle('hidden-column');
+                    console.log(`ボディセル (内容: '${bodyCell.textContent.trim().substring(0, 30)}...') の表示を切り替えました。`);
                 });
             });
         });
+
+        // Load data when the DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', loadCardData);
     </script>
 </body>
 </html>
